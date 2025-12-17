@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, ChevronLeft, Star, Plus, Minus, X, Coffee, Utensils, Zap, Award, ArrowRight, Check, User, Phone, Sparkles, Clock, Package, Edit3, ThermometerSnowflake } from 'lucide-react';
+import { ShoppingBag, ChevronLeft, Star, Plus, Minus, X, Coffee, Utensils, Zap, Award, ArrowRight, Check, User, Phone, Sparkles, Clock, Package, Edit3, ThermometerSnowflake, Leaf } from 'lucide-react';
 
 // --- Mock Data ---
 
@@ -20,7 +20,6 @@ const MENU_ITEMS = [
     description: 'Special price! Fresh strawberry puree meets premium iced matcha.',
     price: 17000, 
     originalPrice: 34000,
-    // Gambar dari kode pilihan Anda
     image: 'https://tse2.mm.bing.net/th?q=strawberry+matcha+latte+layers&w=500&h=500&c=7',
     tags: ['50% OFF', 'Smart Bar'],
     method: 'smart_bar',
@@ -207,13 +206,17 @@ const CUSTOMIZATIONS = {
     { id: 'standard', name: 'Standard (2g)', price: 0, desc: 'Balanced' },
     { id: 'strong', name: 'Strong (3g)', price: 5000, desc: 'Extra Umami' },
   ],
-  // [NEW] Added Ice Level Customization
   ice: [
     { id: 'normal', name: 'Normal Ice', price: 0 },
     { id: 'less', name: 'Less Ice', price: 0 },
     { id: 'no', name: 'No Ice', price: 0 },
     { id: 'extra', name: 'Extra Ice', price: 0 },
   ],
+  // [NEW] Opsi Harvest Grade khusus Premium
+  harvest: [
+    { id: 'second', name: 'Second Harvest', price: 0, desc: 'Standard Grade' },
+    { id: 'first', name: 'First Harvest (Umami)', price: 9000, desc: 'Rich & Intense' },
+  ]
 };
 
 // --- Main App Component ---
@@ -237,13 +240,23 @@ export default function FeelMatchaApp() {
   };
 
   const addToCart = (item, options, note, quantity) => {
+    // Hitung harga dasar + opsi tambahan
+    let extraPrice = 
+      (options?.milk?.price || 0) + 
+      (options?.strength?.price || 0);
+
+    // [LOGIC BARU] Tambah harga Harvest jika item Premium
+    if (item.categoryId === 'premium' && options?.harvest?.price) {
+      extraPrice += options.harvest.price;
+    }
+
     const newItem = {
       ...item,
       options,
       note,
       quantity,
       cartId: Date.now(),
-      totalPrice: (item.price + (options?.milk?.price || 0) + (options?.strength?.price || 0)) * quantity,
+      totalPrice: (item.price + extraPrice) * quantity,
     };
     setCart([...cart, newItem]);
     
@@ -369,7 +382,7 @@ function LoginView({ onLogin }) {
     <div className="h-full flex flex-col justify-center items-center p-8 bg-white text-center">
       <div className="mb-20"></div>
       
-      {/* Login Screen Title Only - No Logo Image */}
+      {/* Login Screen Title Only */}
       <h1 className="text-4xl font-extrabold text-green-900 mb-2 tracking-tight">FEEL <br/>MATCHA</h1>
       
       <p className="text-gray-500 mb-12 text-sm max-w-xs mx-auto font-medium">
@@ -416,7 +429,7 @@ function MenuView({ selectedCategory, setSelectedCategory, onItemClick }) {
     <>
       <div className="mt-6"></div>
 
-      {/* JOIN COMMUNITY BANNER (Inside the app now) */}
+      {/* JOIN COMMUNITY BANNER */}
       <div className="px-4 mb-4">
         <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl p-3 text-white flex justify-between items-center shadow-md">
           <div>
@@ -539,10 +552,19 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
     milk: CUSTOMIZATIONS.milk[0],
     sugar: CUSTOMIZATIONS.sugar[0],
     strength: CUSTOMIZATIONS.strength[0],
-    ice: CUSTOMIZATIONS.ice[0] // Added Ice Level State
+    ice: CUSTOMIZATIONS.ice[0],
+    harvest: CUSTOMIZATIONS.harvest[0] // [NEW] Default to Second Harvest
   });
 
-  const currentPrice = (item.price + options.milk.price + options.strength.price) * quantity;
+  // Calculate dynamic price based on selection
+  let extraPrice = options.milk.price + options.strength.price;
+  
+  // [NEW] Logic: Only add harvest price if item is Premium
+  if (item.categoryId === 'premium') {
+    extraPrice += options.harvest.price;
+  }
+
+  const currentPrice = (item.price + extraPrice) * quantity;
 
   return (
     <div className="fixed inset-0 z-50 bg-white flex flex-col animate-in slide-in-from-bottom duration-300">
@@ -563,7 +585,7 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
           <h2 className="text-2xl font-bold text-gray-900">{item.name}</h2>
           <p className="text-gray-500 mt-2 text-sm leading-relaxed">{item.description}</p>
           
-          {/* METHOD INDICATOR - CRITICAL STRATEGY POINT */}
+          {/* METHOD INDICATOR */}
           <div className={`mt-4 flex items-center space-x-3 p-3 rounded-lg border ${
             item.method === 'smart_bar' 
               ? 'bg-yellow-50 border-yellow-100 text-yellow-900' 
@@ -587,6 +609,36 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
 
         {item.customizable && (
           <div className="space-y-6">
+            
+            {/* [BARU] HARVEST GRADE OPTION - Only for Premium */}
+            {item.categoryId === 'premium' && (
+              <div>
+                <div className="flex items-center space-x-2 mb-3">
+                  <Leaf size={16} className="text-green-600" />
+                  <label className="font-bold text-gray-900">Matcha Grade</label>
+                </div>
+                <div className="grid grid-cols-1 gap-2">
+                  {CUSTOMIZATIONS.harvest.map(opt => (
+                    <button
+                      key={opt.id}
+                      onClick={() => setOptions({ ...options, harvest: opt })}
+                      className={`flex justify-between items-center p-3 rounded-xl border text-left transition-all ${
+                        options.harvest.id === opt.id
+                          ? 'border-green-600 bg-green-50 ring-1 ring-green-600'
+                          : 'border-gray-200 hover:border-green-300'
+                      }`}
+                    >
+                      <div>
+                        <div className={`font-semibold text-sm ${options.harvest.id === opt.id ? 'text-green-900' : 'text-gray-700'}`}>{opt.name}</div>
+                        <div className="text-xs text-gray-500">{opt.desc}</div>
+                      </div>
+                      {opt.price > 0 && <span className="text-xs font-bold text-green-700">+Rp {opt.price.toLocaleString()}</span>}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div>
               <div className="flex justify-between items-center mb-3">
                 <label className="font-bold text-gray-900">Matcha Strength</label>
@@ -615,7 +667,7 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
               </div>
             </div>
             
-            {/* ICE LEVEL - ADDED HERE */}
+            {/* ICE LEVEL */}
             <div>
               <div className="flex items-center space-x-2 mb-3">
                 <ThermometerSnowflake size={16} className="text-gray-400" />
@@ -676,7 +728,7 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
               </div>
             </div>
 
-            {/* NOTES - ADDED HERE */}
+            {/* NOTES */}
             <div>
               <div className="flex items-center space-x-2 mb-3">
                 <Edit3 size={16} className="text-gray-400" />
@@ -746,12 +798,14 @@ function CartView({ cart, total, onBack, onPlaceOrder, setCart }) {
                 <h3 className="font-bold text-gray-900">{item.name}</h3>
                 {item.customizable && (
                   <div className="text-xs text-gray-500 mt-1 space-y-0.5">
+                    {/* [DISPLAY] Tampilkan Grade jika ada */}
+                    {item.options?.harvest && item.categoryId === 'premium' && (
+                       <p className="font-semibold text-green-700">Grade: {item.options.harvest.name}</p>
+                    )}
                     <p>Strength: {item.options?.strength?.name}</p>
-                    {/* Display Ice Selection */}
                     <p>Ice: {item.options?.ice?.name}</p>
                     <p>Milk: {item.options?.milk?.name}</p>
                     <p>Sugar: {item.options?.sugar?.name}</p>
-                    {/* Display Note */}
                     {item.note && <p className="text-orange-600 italic">Note: "{item.note}"</p>}
                   </div>
                 )}
