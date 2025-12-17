@@ -20,7 +20,7 @@ const MENU_ITEMS = [
     description: 'Special price! Fresh strawberry puree meets premium iced matcha.',
     price: 17000, 
     originalPrice: 34000,
-    // Menggunakan gambar Strawberry Matcha dari kode Anda
+    // Gambar dari kode pilihan Anda
     image: 'https://tse2.mm.bing.net/th?q=strawberry+matcha+latte+layers&w=500&h=500&c=7',
     tags: ['50% OFF', 'Smart Bar'],
     method: 'smart_bar',
@@ -33,7 +33,6 @@ const MENU_ITEMS = [
     description: 'Crispy choux pastry filled with premium matcha cream.',
     price: 12000,
     originalPrice: 24000,
-    // Gambar Matcha Cream Puff
     image: 'https://tse1.mm.bing.net/th?q=matcha+cream+puff+pastry&w=500&h=500&c=7', 
     tags: ['Sold Out Soon', 'Sweet Treat'],
     method: 'smart_bar',
@@ -48,7 +47,6 @@ const MENU_ITEMS = [
     description: 'Signature Iced Matcha Latte + Matcha Mille Crepe.',
     price: 55000,
     originalPrice: 60000,
-    // Gambar Mille Crepe
     image: 'https://tse2.mm.bing.net/th?q=matcha+mille+crepe+cake+slice&w=500&h=500&c=7',
     tags: ['Hemat 5k', 'Best Value'],
     method: 'smart_bar',
@@ -61,7 +59,6 @@ const MENU_ITEMS = [
     description: 'Iced Matcha Macchiato + Croffle Original.',
     price: 45000,
     originalPrice: 49000,
-    // Gambar Croffle
     image: 'https://tse3.mm.bing.net/th?q=croffle+plain&w=500&h=500&c=7',
     tags: ['Breakfast', 'Hemat'],
     method: 'smart_bar',
@@ -75,7 +72,6 @@ const MENU_ITEMS = [
     name: 'Signature Matcha Latte',
     description: 'Our classic blend. Freshly whisked ceremonial grade matcha with premium milk and ice.',
     price: 32000, 
-    // URL dari kode Anda
     image: 'https://tse4.mm.bing.net/th?q=iced+matcha+latte+plastic+cup&w=500&h=500&c=7', 
     tags: ['Best Seller', 'Smart Bar'],
     method: 'smart_bar',
@@ -87,7 +83,6 @@ const MENU_ITEMS = [
     name: 'Matcha Macchiato',
     description: 'Iced. A delicate balance of matcha and macchiato foam. Creamy and intense.',
     price: 34000, 
-    // URL dari kode Anda
     image: 'https://tse3.mm.bing.net/th?q=matcha+macchiato+drink&w=500&h=500&c=7', 
     tags: ['Creamy', 'Smart Bar'],
     method: 'smart_bar',
@@ -99,7 +94,6 @@ const MENU_ITEMS = [
     name: 'Cream Cheese Overdose',
     description: 'Iced Signature matcha topped with thick savory cream cheese foam.',
     price: 38000,
-    // URL dari kode Anda
     image: 'https://tse1.mm.bing.net/th?q=cheese+foam+matcha+tea&w=500&h=500&c=7', 
     tags: ['Savory Sweet', 'Smart Bar'],
     method: 'smart_bar',
@@ -111,7 +105,6 @@ const MENU_ITEMS = [
     name: 'Strawberry Matcha',
     description: 'Iced. Sweet house-made strawberry puree layered with fresh matcha milk.',
     price: 34000, 
-    // URL dari kode Anda
     image: 'https://tse2.mm.bing.net/th?q=strawberry+matcha+latte+layers&w=500&h=500&c=7', 
     tags: ['Fruity', 'Smart Bar'],
     method: 'smart_bar',
@@ -123,7 +116,6 @@ const MENU_ITEMS = [
     name: 'Tropical Lemonade Matcha',
     description: 'Refreshing iced zesty lemonade topped with a shot of premium matcha.',
     price: 32000, 
-    // URL dari kode Anda
     image: 'https://tse1.mm.bing.net/th?q=iced+matcha+lemonade&w=500&h=500&c=7', 
     tags: ['Refreshing', 'Smart Bar'],
     method: 'smart_bar',
@@ -137,7 +129,6 @@ const MENU_ITEMS = [
     name: 'Koku Matcha Latte',
     description: 'Iced. Prime Takumi Harvest. Elegant harmony of umami richness.',
     price: 62000,
-    // URL dari kode Anda
     image: 'https://tse4.mm.bing.net/th?q=hot+matcha+latte+art+ceramic+cup&w=500&h=500&c=7',
     tags: ['Prime Harvest', 'Hand Whisked'],
     method: 'manual',
@@ -149,7 +140,6 @@ const MENU_ITEMS = [
     name: 'Koku Usucha',
     description: 'Iced Pure thin tea. The truest expression of Takumi Harvest.',
     price: 58000,
-    // URL dari kode Anda
     image: 'https://tse2.mm.bing.net/th?q=matcha+tea+ceremony+bowl&w=500&h=500&c=7',
     tags: ['Pure Tea', 'Hand Whisked'],
     method: 'manual',
@@ -161,7 +151,6 @@ const MENU_ITEMS = [
     name: 'Nagomi Matcha Latte',
     description: 'Iced. Delicate nori aroma, robust umami, silky-smooth texture.',
     price: 52000,
-    // URL dari kode Anda
     image: 'https://tse3.mm.bing.net/th?q=matcha+latte+art+heart&w=500&h=500&c=7',
     tags: ['Silky Smooth', 'Hand Whisked'],
     method: 'manual',
@@ -173,7 +162,6 @@ const MENU_ITEMS = [
     name: 'Nagomi Usucha',
     description: 'Iced Pure thin tea. Robust umami with a silky texture.',
     price: 49000,
-    // URL dari kode Anda
     image: 'https://tse4.mm.bing.net/th?q=cold+brew+matcha+glass&w=500&h=500&c=7',
     tags: ['Pure Tea', 'Hand Whisked'],
     method: 'manual',
@@ -187,7 +175,6 @@ const MENU_ITEMS = [
     name: 'Matcha Mille Crepe',
     description: '20 layers of delicate crepe with matcha cream.',
     price: 38000,
-    // URL dari kode Anda
     image: 'https://tse2.mm.bing.net/th?q=matcha+mille+crepe+cake+slice&w=500&h=500&c=7',
     tags: ['Perfect Pairing'], 
     customizable: false,
@@ -198,7 +185,6 @@ const MENU_ITEMS = [
     name: 'Croffle Original',
     description: 'Crispy croissant waffle with maple syrup.',
     price: 25000, 
-    // URL dari kode Anda
     image: 'https://tse3.mm.bing.net/th?q=croffle+plain&w=500&h=500&c=7',
     tags: [],
     customizable: false,
@@ -221,6 +207,7 @@ const CUSTOMIZATIONS = {
     { id: 'standard', name: 'Standard (2g)', price: 0, desc: 'Balanced' },
     { id: 'strong', name: 'Strong (3g)', price: 5000, desc: 'Extra Umami' },
   ],
+  // [NEW] Added Ice Level Customization
   ice: [
     { id: 'normal', name: 'Normal Ice', price: 0 },
     { id: 'less', name: 'Less Ice', price: 0 },
@@ -552,7 +539,7 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
     milk: CUSTOMIZATIONS.milk[0],
     sugar: CUSTOMIZATIONS.sugar[0],
     strength: CUSTOMIZATIONS.strength[0],
-    ice: CUSTOMIZATIONS.ice[0] 
+    ice: CUSTOMIZATIONS.ice[0] // Added Ice Level State
   });
 
   const currentPrice = (item.price + options.milk.price + options.strength.price) * quantity;
@@ -576,7 +563,7 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
           <h2 className="text-2xl font-bold text-gray-900">{item.name}</h2>
           <p className="text-gray-500 mt-2 text-sm leading-relaxed">{item.description}</p>
           
-          {/* METHOD INDICATOR */}
+          {/* METHOD INDICATOR - CRITICAL STRATEGY POINT */}
           <div className={`mt-4 flex items-center space-x-3 p-3 rounded-lg border ${
             item.method === 'smart_bar' 
               ? 'bg-yellow-50 border-yellow-100 text-yellow-900' 
@@ -628,7 +615,7 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
               </div>
             </div>
             
-            {/* ICE LEVEL */}
+            {/* ICE LEVEL - ADDED HERE */}
             <div>
               <div className="flex items-center space-x-2 mb-3">
                 <ThermometerSnowflake size={16} className="text-gray-400" />
@@ -689,7 +676,7 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
               </div>
             </div>
 
-            {/* NOTES */}
+            {/* NOTES - ADDED HERE */}
             <div>
               <div className="flex items-center space-x-2 mb-3">
                 <Edit3 size={16} className="text-gray-400" />
@@ -760,9 +747,11 @@ function CartView({ cart, total, onBack, onPlaceOrder, setCart }) {
                 {item.customizable && (
                   <div className="text-xs text-gray-500 mt-1 space-y-0.5">
                     <p>Strength: {item.options?.strength?.name}</p>
+                    {/* Display Ice Selection */}
                     <p>Ice: {item.options?.ice?.name}</p>
                     <p>Milk: {item.options?.milk?.name}</p>
                     <p>Sugar: {item.options?.sugar?.name}</p>
+                    {/* Display Note */}
                     {item.note && <p className="text-orange-600 italic">Note: "{item.note}"</p>}
                   </div>
                 )}
