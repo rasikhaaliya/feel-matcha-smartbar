@@ -1,23 +1,81 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, ChevronLeft, Star, Plus, Minus, X, Coffee, Utensils, Zap, Award, ArrowRight, Check, User, Phone, Sparkles } from 'lucide-react';
+import { ShoppingBag, ChevronLeft, Star, Plus, Minus, X, Coffee, Utensils, Zap, Award, ArrowRight, Check, User, Phone, Sparkles, Clock, Package, Edit3, ThermometerSnowflake } from 'lucide-react';
 
 // --- Mock Data ---
 
 const CATEGORIES = [
+  { id: 'flash_sale', name: 'Flash Sale ⚡', icon: <Clock size={18} /> },
+  { id: 'bundling', name: 'Paket Bundling', icon: <Package size={18} /> },
   { id: 'best_seller', name: 'Best Sellers', icon: <Zap size={18} /> },
   { id: 'premium', name: 'Premium Series', icon: <Star size={18} /> },
   { id: 'food', name: 'Pastry & Food', icon: <Utensils size={18} /> },
 ];
 
 const MENU_ITEMS = [
-  // --- BEST SELLERS (Smart Bar Compatible - Fast) ---
+  // --- FLASH SALE ---
+  {
+    id: 99,
+    categoryId: 'flash_sale',
+    name: 'Flash: Strawberry Matcha',
+    description: 'Special price! Fresh strawberry puree meets premium iced matcha.',
+    price: 17000, 
+    originalPrice: 34000,
+    // Menggunakan gambar Strawberry Matcha dari kode Anda
+    image: 'https://tse2.mm.bing.net/th?q=strawberry+matcha+latte+layers&w=500&h=500&c=7',
+    tags: ['50% OFF', 'Smart Bar'],
+    method: 'smart_bar',
+    customizable: true,
+  },
+  {
+    id: 98,
+    categoryId: 'flash_sale',
+    name: 'Flash: Matcha Choux',
+    description: 'Crispy choux pastry filled with premium matcha cream.',
+    price: 12000,
+    originalPrice: 24000,
+    // Gambar Matcha Cream Puff
+    image: 'https://tse1.mm.bing.net/th?q=matcha+cream+puff+pastry&w=500&h=500&c=7', 
+    tags: ['Sold Out Soon', 'Sweet Treat'],
+    method: 'smart_bar',
+    customizable: false,
+  },
+
+  // --- PAKET BUNDLING ---
+  {
+    id: 88,
+    categoryId: 'bundling',
+    name: 'Perfect Pair Set',
+    description: 'Signature Iced Matcha Latte + Matcha Mille Crepe.',
+    price: 55000,
+    originalPrice: 60000,
+    // Gambar Mille Crepe
+    image: 'https://tse2.mm.bing.net/th?q=matcha+mille+crepe+cake+slice&w=500&h=500&c=7',
+    tags: ['Hemat 5k', 'Best Value'],
+    method: 'smart_bar',
+    customizable: true,
+  },
+  {
+    id: 89,
+    categoryId: 'bundling',
+    name: 'Morning Booster',
+    description: 'Iced Matcha Macchiato + Croffle Original.',
+    price: 45000,
+    originalPrice: 49000,
+    // Gambar Croffle
+    image: 'https://tse3.mm.bing.net/th?q=croffle+plain&w=500&h=500&c=7',
+    tags: ['Breakfast', 'Hemat'],
+    method: 'smart_bar',
+    customizable: true,
+  },
+
+  // --- BEST SELLERS (Smart Bar - All Iced) ---
   {
     id: 1,
     categoryId: 'best_seller',
     name: 'Signature Matcha Latte',
-    description: 'Our classic blend. Freshly whisked ceremonial grade matcha with premium milk.',
+    description: 'Our classic blend. Freshly whisked ceremonial grade matcha with premium milk and ice.',
     price: 32000, 
-    // Classic Iced Green
+    // URL dari kode Anda
     image: 'https://tse4.mm.bing.net/th?q=iced+matcha+latte+plastic+cup&w=500&h=500&c=7', 
     tags: ['Best Seller', 'Smart Bar'],
     method: 'smart_bar',
@@ -27,9 +85,9 @@ const MENU_ITEMS = [
     id: 2,
     categoryId: 'best_seller',
     name: 'Matcha Macchiato',
-    description: 'A delicate balance of matcha and macchiato foam. Creamy and intense.',
+    description: 'Iced. A delicate balance of matcha and macchiato foam. Creamy and intense.',
     price: 34000, 
-    // Layered Green/White
+    // URL dari kode Anda
     image: 'https://tse3.mm.bing.net/th?q=matcha+macchiato+drink&w=500&h=500&c=7', 
     tags: ['Creamy', 'Smart Bar'],
     method: 'smart_bar',
@@ -39,9 +97,9 @@ const MENU_ITEMS = [
     id: 3,
     categoryId: 'best_seller',
     name: 'Cream Cheese Overdose',
-    description: 'Signature matcha topped with thick savory cream cheese foam.',
+    description: 'Iced Signature matcha topped with thick savory cream cheese foam.',
     price: 38000,
-    // Thick White Foam Top
+    // URL dari kode Anda
     image: 'https://tse1.mm.bing.net/th?q=cheese+foam+matcha+tea&w=500&h=500&c=7', 
     tags: ['Savory Sweet', 'Smart Bar'],
     method: 'smart_bar',
@@ -51,9 +109,9 @@ const MENU_ITEMS = [
     id: 4,
     categoryId: 'best_seller',
     name: 'Strawberry Matcha',
-    description: 'Sweet house-made strawberry puree layered with fresh matcha milk.',
+    description: 'Iced. Sweet house-made strawberry puree layered with fresh matcha milk.',
     price: 34000, 
-    // Pink Bottom, Green Top
+    // URL dari kode Anda
     image: 'https://tse2.mm.bing.net/th?q=strawberry+matcha+latte+layers&w=500&h=500&c=7', 
     tags: ['Fruity', 'Smart Bar'],
     method: 'smart_bar',
@@ -63,23 +121,23 @@ const MENU_ITEMS = [
     id: 5,
     categoryId: 'best_seller',
     name: 'Tropical Lemonade Matcha',
-    description: 'Refreshing zesty lemonade topped with a shot of premium matcha.',
+    description: 'Refreshing iced zesty lemonade topped with a shot of premium matcha.',
     price: 32000, 
-    // Yellow/Green Gradient
+    // URL dari kode Anda
     image: 'https://tse1.mm.bing.net/th?q=iced+matcha+lemonade&w=500&h=500&c=7', 
     tags: ['Refreshing', 'Smart Bar'],
     method: 'smart_bar',
     customizable: true,
   },
 
-  // --- PREMIUM SERIES (Manual Whisk Only - Slow/Artisan) ---
+  // --- PREMIUM SERIES (Manual Whisk - All Iced) ---
   {
     id: 101,
     categoryId: 'premium',
     name: 'Koku Matcha Latte',
-    description: 'Prime Takumi Harvest. Elegant harmony of umami richness and natural sweetness.',
+    description: 'Iced. Prime Takumi Harvest. Elegant harmony of umami richness.',
     price: 62000,
-    // Dark Rich Green, Ceramic Cup
+    // URL dari kode Anda
     image: 'https://tse4.mm.bing.net/th?q=hot+matcha+latte+art+ceramic+cup&w=500&h=500&c=7',
     tags: ['Prime Harvest', 'Hand Whisked'],
     method: 'manual',
@@ -89,9 +147,9 @@ const MENU_ITEMS = [
     id: 102,
     categoryId: 'premium',
     name: 'Koku Usucha',
-    description: 'Pure thin tea. The truest expression of Takumi Harvest. Intense umami.',
+    description: 'Iced Pure thin tea. The truest expression of Takumi Harvest.',
     price: 58000,
-    // Pure Tea Bowl
+    // URL dari kode Anda
     image: 'https://tse2.mm.bing.net/th?q=matcha+tea+ceremony+bowl&w=500&h=500&c=7',
     tags: ['Pure Tea', 'Hand Whisked'],
     method: 'manual',
@@ -101,9 +159,9 @@ const MENU_ITEMS = [
     id: 103,
     categoryId: 'premium',
     name: 'Nagomi Matcha Latte',
-    description: 'Delicate nori aroma, robust umami, silky-smooth texture.',
+    description: 'Iced. Delicate nori aroma, robust umami, silky-smooth texture.',
     price: 52000,
-    // Soft Latte Art
+    // URL dari kode Anda
     image: 'https://tse3.mm.bing.net/th?q=matcha+latte+art+heart&w=500&h=500&c=7',
     tags: ['Silky Smooth', 'Hand Whisked'],
     method: 'manual',
@@ -113,9 +171,9 @@ const MENU_ITEMS = [
     id: 104,
     categoryId: 'premium',
     name: 'Nagomi Usucha',
-    description: 'Pure thin tea. Robust umami with a silky texture.',
+    description: 'Iced Pure thin tea. Robust umami with a silky texture.',
     price: 49000,
-    // Clear Glass Pure Green
+    // URL dari kode Anda
     image: 'https://tse4.mm.bing.net/th?q=cold+brew+matcha+glass&w=500&h=500&c=7',
     tags: ['Pure Tea', 'Hand Whisked'],
     method: 'manual',
@@ -129,7 +187,7 @@ const MENU_ITEMS = [
     name: 'Matcha Mille Crepe',
     description: '20 layers of delicate crepe with matcha cream.',
     price: 38000,
-    // Green Layer Cake
+    // URL dari kode Anda
     image: 'https://tse2.mm.bing.net/th?q=matcha+mille+crepe+cake+slice&w=500&h=500&c=7',
     tags: ['Perfect Pairing'], 
     customizable: false,
@@ -140,7 +198,7 @@ const MENU_ITEMS = [
     name: 'Croffle Original',
     description: 'Crispy croissant waffle with maple syrup.',
     price: 25000, 
-    // Waffle
+    // URL dari kode Anda
     image: 'https://tse3.mm.bing.net/th?q=croffle+plain&w=500&h=500&c=7',
     tags: [],
     customizable: false,
@@ -163,13 +221,19 @@ const CUSTOMIZATIONS = {
     { id: 'standard', name: 'Standard (2g)', price: 0, desc: 'Balanced' },
     { id: 'strong', name: 'Strong (3g)', price: 5000, desc: 'Extra Umami' },
   ],
+  ice: [
+    { id: 'normal', name: 'Normal Ice', price: 0 },
+    { id: 'less', name: 'Less Ice', price: 0 },
+    { id: 'no', name: 'No Ice', price: 0 },
+    { id: 'extra', name: 'Extra Ice', price: 0 },
+  ],
 };
 
 // --- Main App Component ---
 
 export default function FeelMatchaApp() {
   const [currentPage, setCurrentPage] = useState('login');
-  const [selectedCategory, setSelectedCategory] = useState('best_seller');
+  const [selectedCategory, setSelectedCategory] = useState('flash_sale');
   const [selectedItem, setSelectedItem] = useState(null);
   const [cart, setCart] = useState([]);
   const [loyaltyPoints, setLoyaltyPoints] = useState(0);
@@ -185,16 +249,18 @@ export default function FeelMatchaApp() {
     setCurrentPage('menu');
   };
 
-  const addToCart = (item, options, quantity) => {
+  const addToCart = (item, options, note, quantity) => {
     const newItem = {
       ...item,
       options,
+      note,
       quantity,
       cartId: Date.now(),
       totalPrice: (item.price + (options?.milk?.price || 0) + (options?.strength?.price || 0)) * quantity,
     };
     setCart([...cart, newItem]);
     
+    // Smart Upsell Logic
     if (item.categoryId === 'best_seller' && !cart.some(i => i.categoryId === 'food')) {
       setShowUpsell(true);
     } else {
@@ -224,10 +290,10 @@ export default function FeelMatchaApp() {
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-900 max-w-md mx-auto shadow-2xl overflow-hidden relative flex flex-col">
+      {/* HEADER (After Login) */}
       {currentPage !== 'login' && (
         <div className="bg-white px-4 py-3 shadow-sm sticky top-0 z-10 flex justify-between items-center flex-shrink-0">
           <div className="flex items-center space-x-2">
-            {/* Header Text Only */}
             <div>
               <h1 className="font-bold text-lg leading-none text-green-900">FEEL MATCHA</h1>
               <p className="text-xs text-gray-500">Hi, {user.name.split(' ')[0]}</p>
@@ -242,6 +308,7 @@ export default function FeelMatchaApp() {
         </div>
       )}
 
+      {/* BODY CONTENT */}
       <div className={`flex-1 ${currentPage === 'menu' ? 'pb-24' : ''} overflow-y-auto`}>
         {currentPage === 'login' && <LoginView onLogin={handleLogin} />}
         {currentPage === 'menu' && (
@@ -285,6 +352,7 @@ export default function FeelMatchaApp() {
         />
       )}
 
+      {/* BOTTOM NAV / CART BUTTON */}
       {currentPage === 'menu' && cart.length > 0 && (
         <div className="fixed bottom-0 max-w-md w-full p-4 bg-gradient-to-t from-white via-white to-transparent z-20">
           <button 
@@ -312,13 +380,13 @@ function LoginView({ onLogin }) {
 
   return (
     <div className="h-full flex flex-col justify-center items-center p-8 bg-white text-center">
-      {/* Spacer for vertical centering, reduced top spacing since image is gone */}
-      <div className="mb-10"></div>
+      <div className="mb-20"></div>
       
-      {/* Simple Text Logo - No Image */}
-      <h1 className="text-4xl font-extrabold text-green-900 mb-2 tracking-tight">Feel Matcha Gang</h1>
-      <p className="text-gray-500 mb-12 text-sm max-w-xs mx-auto">
-        Join the community. Earn points. <br/> Drink premium matcha.
+      {/* Login Screen Title Only - No Logo Image */}
+      <h1 className="text-4xl font-extrabold text-green-900 mb-2 tracking-tight">FEEL <br/>MATCHA</h1>
+      
+      <p className="text-gray-500 mb-12 text-sm max-w-xs mx-auto font-medium">
+        Premium Ceremonial Grade Matcha<br/>from Japan.
       </p>
       
       <div className="w-full space-y-4 mb-8">
@@ -359,10 +427,22 @@ function LoginView({ onLogin }) {
 function MenuView({ selectedCategory, setSelectedCategory, onItemClick }) {
   return (
     <>
-      {/* Logo Removed from Top of Menu */}
-      <div className="mt-4"></div>
+      <div className="mt-6"></div>
 
-      {/* SMART BAR PROMO BANNER - NOW CLICKABLE */}
+      {/* JOIN COMMUNITY BANNER (Inside the app now) */}
+      <div className="px-4 mb-4">
+        <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl p-3 text-white flex justify-between items-center shadow-md">
+          <div>
+            <div className="text-xs text-gray-300 font-bold uppercase tracking-wider">Community</div>
+            <div className="font-bold text-sm">Join Feel Matcha Gang</div>
+          </div>
+          <button className="bg-white text-gray-900 text-xs font-bold px-3 py-1.5 rounded-lg">
+            Join
+          </button>
+        </div>
+      </div>
+
+      {/* SMART BAR PROMO BANNER */}
       <div className="px-4 mt-2">
         <div 
           onClick={() => setSelectedCategory('best_seller')}
@@ -384,7 +464,7 @@ function MenuView({ selectedCategory, setSelectedCategory, onItemClick }) {
       </div>
 
       {/* Category Tabs */}
-      <div className="flex overflow-x-auto px-4 space-x-3 my-4 no-scrollbar">
+      <div className="flex overflow-x-auto px-4 space-x-3 my-4 no-scrollbar pb-2">
         {CATEGORIES.map(cat => (
           <button 
             key={cat.id}
@@ -409,8 +489,13 @@ function MenuView({ selectedCategory, setSelectedCategory, onItemClick }) {
             onClick={() => onItemClick(item)}
             className="bg-white p-3 rounded-xl border border-gray-100 shadow-sm flex space-x-3 active:bg-gray-50 transition-colors relative overflow-hidden"
           >
-            {/* Tech Badge */}
-            {item.method === 'smart_bar' && (
+            {/* Badges */}
+            {item.categoryId === 'flash_sale' && (
+              <div className="absolute top-0 right-0 bg-red-500 text-[10px] font-bold px-2 py-0.5 rounded-bl-lg text-white z-10 flex items-center shadow-sm animate-pulse">
+                <Clock size={10} className="mr-1" /> Limited Time
+              </div>
+            )}
+            {item.categoryId !== 'flash_sale' && item.method === 'smart_bar' && (
               <div className="absolute top-0 right-0 bg-yellow-400 text-[10px] font-bold px-2 py-0.5 rounded-bl-lg text-yellow-900 z-10 flex items-center shadow-sm">
                 <Zap size={10} className="mr-1 fill-yellow-900" /> Smart Bar
               </div>
@@ -427,9 +512,11 @@ function MenuView({ selectedCategory, setSelectedCategory, onItemClick }) {
                   <div className="flex flex-wrap gap-1 mt-2">
                     {item.tags.map(tag => (
                       <span key={tag} className={`text-[10px] px-1.5 py-0.5 rounded border font-medium ${
-                        tag === 'Hand Whisked' 
-                          ? 'bg-green-100 text-green-800 border-green-200' 
-                          : 'bg-gray-50 text-gray-600 border-gray-100'
+                        tag.includes('OFF') 
+                          ? 'bg-red-100 text-red-700 border-red-200'
+                          : tag.includes('Hemat') 
+                            ? 'bg-orange-100 text-orange-700 border-orange-200'
+                            : 'bg-gray-50 text-gray-600 border-gray-100'
                       }`}>
                         {tag}
                       </span>
@@ -438,7 +525,14 @@ function MenuView({ selectedCategory, setSelectedCategory, onItemClick }) {
                 )}
               </div>
               <div className="flex justify-between items-end mt-2">
-                <span className="font-bold text-green-800">Rp {item.price.toLocaleString('id-ID')}</span>
+                <div className="flex flex-col">
+                  {item.originalPrice && (
+                    <span className="text-xs text-gray-400 line-through">Rp {item.originalPrice.toLocaleString('id-ID')}</span>
+                  )}
+                  <span className={`font-bold ${item.categoryId === 'flash_sale' ? 'text-red-600' : 'text-green-800'}`}>
+                    Rp {item.price.toLocaleString('id-ID')}
+                  </span>
+                </div>
                 <button className="w-8 h-8 rounded-full bg-green-50 text-green-700 flex items-center justify-center">
                   <Plus size={16} />
                 </button>
@@ -453,10 +547,12 @@ function MenuView({ selectedCategory, setSelectedCategory, onItemClick }) {
 
 function ProductDetailView({ item, onClose, onAddToCart }) {
   const [quantity, setQuantity] = useState(1);
+  const [note, setNote] = useState('');
   const [options, setOptions] = useState({
     milk: CUSTOMIZATIONS.milk[0],
     sugar: CUSTOMIZATIONS.sugar[0],
     strength: CUSTOMIZATIONS.strength[0],
+    ice: CUSTOMIZATIONS.ice[0] 
   });
 
   const currentPrice = (item.price + options.milk.price + options.strength.price) * quantity;
@@ -480,7 +576,7 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
           <h2 className="text-2xl font-bold text-gray-900">{item.name}</h2>
           <p className="text-gray-500 mt-2 text-sm leading-relaxed">{item.description}</p>
           
-          {/* METHOD INDICATOR - CRITICAL STRATEGY POINT */}
+          {/* METHOD INDICATOR */}
           <div className={`mt-4 flex items-center space-x-3 p-3 rounded-lg border ${
             item.method === 'smart_bar' 
               ? 'bg-yellow-50 border-yellow-100 text-yellow-900' 
@@ -531,6 +627,29 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
                 ))}
               </div>
             </div>
+            
+            {/* ICE LEVEL */}
+            <div>
+              <div className="flex items-center space-x-2 mb-3">
+                <ThermometerSnowflake size={16} className="text-gray-400" />
+                <label className="font-bold text-gray-900">Ice Level</label>
+              </div>
+              <div className="grid grid-cols-4 gap-2">
+                {CUSTOMIZATIONS.ice.map(opt => (
+                  <button
+                    key={opt.id}
+                    onClick={() => setOptions({ ...options, ice: opt })}
+                    className={`py-2 rounded-lg text-xs font-bold border ${
+                      options.ice.id === opt.id
+                        ? 'bg-green-700 text-white border-green-700'
+                        : 'bg-white text-gray-500 border-gray-200'
+                    }`}
+                  >
+                    {opt.name}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <div>
               <label className="font-bold text-gray-900 block mb-3">Milk Option</label>
@@ -569,6 +688,22 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
                 ))}
               </div>
             </div>
+
+            {/* NOTES */}
+            <div>
+              <div className="flex items-center space-x-2 mb-3">
+                <Edit3 size={16} className="text-gray-400" />
+                <label className="font-bold text-gray-900">Notes to Barista</label>
+              </div>
+              <textarea 
+                className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-gray-50"
+                rows="2"
+                placeholder="e.g. Less straw, extra hot..."
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+              />
+            </div>
+
           </div>
         )}
       </div>
@@ -591,49 +726,12 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
             </button>
           </div>
           <button 
-            onClick={() => onAddToCart(item, options, quantity)}
+            onClick={() => onAddToCart(item, options, note, quantity)}
             className="flex-1 h-12 bg-green-700 hover:bg-green-800 text-white font-bold rounded-xl flex justify-between items-center px-6 transition-colors"
           >
             <span>Add to Order</span>
             <span>Rp {currentPrice.toLocaleString('id-ID')}</span>
           </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function UpsellModal({ onAccept, onDecline }) {
-  return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl transform transition-all scale-100">
-        <div className="h-32 bg-yellow-50 relative overflow-hidden">
-           <img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&q=80&w=500" className="w-full h-full object-cover opacity-90" />
-           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-             <div className="text-white">
-               <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded mb-2 inline-block">LIMITED OFFER</span>
-               <h3 className="font-bold text-lg leading-none">Perfect Pairing?</h3>
-             </div>
-           </div>
-        </div>
-        <div className="p-5">
-          <p className="text-gray-600 text-sm mb-4">
-            Add a <strong>Matcha Mille Crepe</strong> to your drink order and <strong>save Rp 5.000</strong>.
-          </p>
-          <div className="flex space-x-3">
-            <button 
-              onClick={onDecline}
-              className="flex-1 py-3 text-gray-500 font-bold text-sm bg-gray-100 rounded-xl hover:bg-gray-200"
-            >
-              No, thanks
-            </button>
-            <button 
-              onClick={onAccept}
-              className="flex-1 py-3 text-white font-bold text-sm bg-green-700 rounded-xl hover:bg-green-800 shadow-lg shadow-green-700/20"
-            >
-              Add (+33k)
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -661,9 +759,11 @@ function CartView({ cart, total, onBack, onPlaceOrder, setCart }) {
                 <h3 className="font-bold text-gray-900">{item.name}</h3>
                 {item.customizable && (
                   <div className="text-xs text-gray-500 mt-1 space-y-0.5">
-                    <p>{item.options?.strength?.name}</p>
-                    <p>{item.options?.milk?.name}</p>
-                    <p>{item.options?.sugar?.name} Sugar</p>
+                    <p>Strength: {item.options?.strength?.name}</p>
+                    <p>Ice: {item.options?.ice?.name}</p>
+                    <p>Milk: {item.options?.milk?.name}</p>
+                    <p>Sugar: {item.options?.sugar?.name}</p>
+                    {item.note && <p className="text-orange-600 italic">Note: "{item.note}"</p>}
                   </div>
                 )}
                 {item.isPromo && <span className="text-[10px] text-red-500 font-bold mt-1 block">Promo Applied</span>}
