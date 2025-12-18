@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, ChevronLeft, Star, Plus, Minus, X, Coffee, Utensils, Zap, Award, ArrowRight, Check, User, Phone, Sparkles, Clock, Package, Edit3, ThermometerSnowflake, Leaf } from 'lucide-react';
+import { ShoppingBag, ChevronLeft, Star, Plus, Minus, X, Coffee, Utensils, Zap, Award, ArrowRight, Check, User, Phone, Sparkles, Clock, Package, Edit3, ThermometerSnowflake, Leaf, Lock } from 'lucide-react';
 
 // --- Mock Data ---
 
@@ -126,7 +126,7 @@ const MENU_ITEMS = [
     id: 101,
     categoryId: 'premium',
     name: 'Koku Matcha Latte',
-    description: 'Iced. Prime Takumi Harvest. Elegant harmony of umami richness.',
+    description: 'Iced. Prime Takumi Harvest. Elegant harmony of umami richness and natural sweetness.',
     price: 62000,
     image: 'https://tse4.mm.bing.net/th?q=hot+matcha+latte+art+ceramic+cup&w=500&h=500&c=7',
     tags: ['Prime Harvest', 'Hand Whisked'],
@@ -137,12 +137,12 @@ const MENU_ITEMS = [
     id: 102,
     categoryId: 'premium',
     name: 'Koku Usucha',
-    description: 'Iced Pure thin tea. The truest expression of Takumi Harvest.',
+    description: 'Iced Pure thin tea. The truest expression of Takumi Harvest. Intense umami.',
     price: 58000,
     image: 'https://tse2.mm.bing.net/th?q=matcha+tea+ceremony+bowl&w=500&h=500&c=7',
     tags: ['Pure Tea', 'Hand Whisked'],
     method: 'manual',
-    customizable: false,
+    customizable: true, // Diaktifkan agar bisa pilih Harvest Grade
   },
   {
     id: 103,
@@ -164,7 +164,7 @@ const MENU_ITEMS = [
     image: 'https://tse4.mm.bing.net/th?q=cold+brew+matcha+glass&w=500&h=500&c=7',
     tags: ['Pure Tea', 'Hand Whisked'],
     method: 'manual',
-    customizable: false,
+    customizable: true, // Diaktifkan agar bisa pilih Harvest Grade
   },
 
   // --- FOOD ---
@@ -212,7 +212,6 @@ const CUSTOMIZATIONS = {
     { id: 'no', name: 'No Ice', price: 0 },
     { id: 'extra', name: 'Extra Ice', price: 0 },
   ],
-  // [NEW] Opsi Harvest Grade khusus Premium
   harvest: [
     { id: 'second', name: 'Second Harvest', price: 0, desc: 'Standard Grade' },
     { id: 'first', name: 'First Harvest (Umami)', price: 9000, desc: 'Rich & Intense' },
@@ -226,7 +225,6 @@ export default function FeelMatchaApp() {
   const [selectedCategory, setSelectedCategory] = useState('flash_sale');
   const [selectedItem, setSelectedItem] = useState(null);
   const [cart, setCart] = useState([]);
-  const [loyaltyPoints, setLoyaltyPoints] = useState(0);
   const [showUpsell, setShowUpsell] = useState(false);
   const [user, setUser] = useState({ name: '', phone: '' });
 
@@ -235,18 +233,16 @@ export default function FeelMatchaApp() {
 
   const handleLogin = (userData) => {
     setUser(userData);
-    setLoyaltyPoints(150);
     setCurrentPage('menu');
   };
 
   const addToCart = (item, options, note, quantity) => {
-    // Hitung harga dasar + opsi tambahan
     let extraPrice = 
       (options?.milk?.price || 0) + 
       (options?.strength?.price || 0);
 
-    // [LOGIC BARU] Tambah harga Harvest jika item Premium
-    if (item.categoryId === 'premium' && options?.harvest?.price) {
+    // Logic: Tambah harga Harvest jika item Premium dan Customizable
+    if (item.categoryId === 'premium' && options?.harvest?.price && item.customizable) {
       extraPrice += options.harvest.price;
     }
 
@@ -260,7 +256,6 @@ export default function FeelMatchaApp() {
     };
     setCart([...cart, newItem]);
     
-    // Smart Upsell Logic
     if (item.categoryId === 'best_seller' && !cart.some(i => i.categoryId === 'food')) {
       setShowUpsell(true);
     } else {
@@ -284,7 +279,6 @@ export default function FeelMatchaApp() {
 
   const placeOrder = () => {
     setCurrentPage('success');
-    setLoyaltyPoints(prev => prev + Math.floor(cartTotal / 1000));
     setCart([]);
   };
 
@@ -302,7 +296,7 @@ export default function FeelMatchaApp() {
           <div className="flex flex-col items-end">
             <div className="flex items-center space-x-1 text-green-700 bg-green-50 px-2 py-1 rounded-full border border-green-100">
               <Award size={12} />
-              <span className="text-xs font-bold">{loyaltyPoints} Pts</span>
+              <span className="text-xs font-bold">150 Pts</span>
             </div>
           </div>
         </div>
@@ -489,7 +483,6 @@ function MenuView({ selectedCategory, setSelectedCategory, onItemClick }) {
             onClick={() => onItemClick(item)}
             className="bg-white p-3 rounded-xl border border-gray-100 shadow-sm flex space-x-3 active:bg-gray-50 transition-colors relative overflow-hidden"
           >
-            {/* Badges */}
             {item.categoryId === 'flash_sale' && (
               <div className="absolute top-0 right-0 bg-red-500 text-[10px] font-bold px-2 py-0.5 rounded-bl-lg text-white z-10 flex items-center shadow-sm animate-pulse">
                 <Clock size={10} className="mr-1" /> Limited Time
@@ -500,7 +493,6 @@ function MenuView({ selectedCategory, setSelectedCategory, onItemClick }) {
                 <Zap size={10} className="mr-1 fill-yellow-900" /> Smart Bar
               </div>
             )}
-            
             <div className="w-24 h-24 flex-shrink-0 bg-gray-200 rounded-lg overflow-hidden relative">
               <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
             </div>
@@ -553,14 +545,12 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
     sugar: CUSTOMIZATIONS.sugar[0],
     strength: CUSTOMIZATIONS.strength[0],
     ice: CUSTOMIZATIONS.ice[0],
-    harvest: CUSTOMIZATIONS.harvest[0] // [NEW] Default to Second Harvest
+    harvest: CUSTOMIZATIONS.harvest[0] 
   });
 
-  // Calculate dynamic price based on selection
   let extraPrice = options.milk.price + options.strength.price;
   
-  // [NEW] Logic: Only add harvest price if item is Premium
-  if (item.categoryId === 'premium') {
+  if (item.categoryId === 'premium' && options.harvest.price) {
     extraPrice += options.harvest.price;
   }
 
@@ -585,7 +575,6 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
           <h2 className="text-2xl font-bold text-gray-900">{item.name}</h2>
           <p className="text-gray-500 mt-2 text-sm leading-relaxed">{item.description}</p>
           
-          {/* METHOD INDICATOR */}
           <div className={`mt-4 flex items-center space-x-3 p-3 rounded-lg border ${
             item.method === 'smart_bar' 
               ? 'bg-yellow-50 border-yellow-100 text-yellow-900' 
@@ -610,7 +599,7 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
         {item.customizable && (
           <div className="space-y-6">
             
-            {/* [BARU] HARVEST GRADE OPTION - Only for Premium */}
+            {/* HARVEST GRADE OPTION - Only for Premium */}
             {item.categoryId === 'premium' && (
               <div>
                 <div className="flex items-center space-x-2 mb-3">
@@ -642,29 +631,41 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
             <div>
               <div className="flex justify-between items-center mb-3">
                 <label className="font-bold text-gray-900">Matcha Strength</label>
-                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                  {item.method === 'smart_bar' ? 'Auto-Dosed' : 'Hand-Scooped'}
-                </span>
+                {/* LOGIC PERUBAHAN: Tampilkan status di sini */}
+                {item.method === 'smart_bar' && (
+                   <span className="text-xs font-bold text-yellow-700 bg-yellow-100 px-2 py-1 rounded flex items-center">
+                     <Lock size={10} className="mr-1"/> Precision Dosed
+                   </span>
+                )}
               </div>
-              <div className="grid grid-cols-1 gap-2">
-                {CUSTOMIZATIONS.strength.map(opt => (
-                  <button
-                    key={opt.id}
-                    onClick={() => setOptions({ ...options, strength: opt })}
-                    className={`flex justify-between items-center p-3 rounded-xl border text-left transition-all ${
-                      options.strength.id === opt.id
-                        ? 'border-green-600 bg-green-50 ring-1 ring-green-600'
-                        : 'border-gray-200 hover:border-green-300'
-                    }`}
-                  >
-                    <div>
-                      <div className={`font-semibold text-sm ${options.strength.id === opt.id ? 'text-green-900' : 'text-gray-700'}`}>{opt.name}</div>
-                      <div className="text-xs text-gray-500">{opt.desc}</div>
-                    </div>
-                    {opt.price > 0 && <span className="text-xs font-bold text-green-700">+Rp {opt.price.toLocaleString()}</span>}
-                  </button>
-                ))}
-              </div>
+              
+              {/* LOGIC PERUBAHAN: Jika Smart Bar, tampilkan FIXED Label. Jika Manual, tampilkan Pilihan */}
+              {item.method === 'smart_bar' ? (
+                 <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl text-center">
+                    <div className="text-sm font-bold text-gray-500">Standard</div>
+                    <div className="text-xs text-gray-400 mt-1">Calibrated by Smart Bar</div>
+                 </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-2">
+                  {CUSTOMIZATIONS.strength.map(opt => (
+                    <button
+                      key={opt.id}
+                      onClick={() => setOptions({ ...options, strength: opt })}
+                      className={`flex justify-between items-center p-3 rounded-xl border text-left transition-all ${
+                        options.strength.id === opt.id
+                          ? 'border-green-600 bg-green-50 ring-1 ring-green-600'
+                          : 'border-gray-200 hover:border-green-300'
+                      }`}
+                    >
+                      <div>
+                        <div className={`font-semibold text-sm ${options.strength.id === opt.id ? 'text-green-900' : 'text-gray-700'}`}>{opt.name}</div>
+                        <div className="text-xs text-gray-500">{opt.desc}</div>
+                      </div>
+                      {opt.price > 0 && <span className="text-xs font-bold text-green-700">+Rp {opt.price.toLocaleString()}</span>}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             
             {/* ICE LEVEL */}
@@ -802,7 +803,12 @@ function CartView({ cart, total, onBack, onPlaceOrder, setCart }) {
                     {item.options?.harvest && item.categoryId === 'premium' && (
                        <p className="font-semibold text-green-700">Grade: {item.options.harvest.name}</p>
                     )}
-                    <p>Strength: {item.options?.strength?.name}</p>
+                    {/* LOGIC PERUBAHAN: Tampilkan Fixed Strength untuk Smart Bar */}
+                    {item.method === 'smart_bar' ? (
+                       <p>Strength: Standard [Fixed]</p>
+                    ) : (
+                       <p>Strength: {item.options?.strength?.name}</p>
+                    )}
                     <p>Ice: {item.options?.ice?.name}</p>
                     <p>Milk: {item.options?.milk?.name}</p>
                     <p>Sugar: {item.options?.sugar?.name}</p>
