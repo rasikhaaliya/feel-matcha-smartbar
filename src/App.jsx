@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingBag, ChevronLeft, Star, Plus, Minus, X, Coffee, Utensils, Zap, Award, ArrowRight, Check, User, Phone, Clock, Package, Edit3, ThermometerSnowflake, Leaf, Lock, Beaker } from 'lucide-react';
+import { ShoppingBag, ChevronLeft, Star, Plus, Minus, X, Coffee, Utensils, Zap, Award, ArrowRight, Check, User, Phone, Clock, Package, Edit3, ThermometerSnowflake, Leaf, Lock, Beaker, MessageSquare, Users } from 'lucide-react';
 
 /**
  * KONFIGURASI GAMBAR (STABLE URLS)
@@ -41,6 +41,7 @@ const MENU_ITEMS = [
     image: IMAGES.strawberryMatcha,
     tags: ['50% OFF', 'Smart Bar'],
     method: 'smart_bar',
+    grade: 'Second Harvest',
     customizable: true,
   },
   {
@@ -53,6 +54,7 @@ const MENU_ITEMS = [
     image: IMAGES.choux,
     tags: ['Sold Out Soon', 'Sweet Treat'],
     method: 'smart_bar',
+    grade: 'Second Harvest',
     customizable: false,
   },
 
@@ -67,6 +69,7 @@ const MENU_ITEMS = [
     image: IMAGES.milleCrepe,
     tags: ['Hemat 5k', 'Best Value'],
     method: 'smart_bar',
+    grade: 'Second Harvest',
     customizable: true,
   },
   {
@@ -79,10 +82,11 @@ const MENU_ITEMS = [
     image: IMAGES.croffle,
     tags: ['Breakfast', 'Hemat'],
     method: 'smart_bar',
+    grade: 'Second Harvest',
     customizable: true,
   },
 
-  // --- BEST SELLERS (Smart Bar - Fixed Strength) ---
+  // --- BEST SELLERS ---
   {
     id: 1,
     categoryId: 'best_seller',
@@ -92,6 +96,7 @@ const MENU_ITEMS = [
     image: IMAGES.signatureLatte,
     tags: ['Best Seller', 'Smart Bar'],
     method: 'smart_bar',
+    grade: 'Second Harvest',
     customizable: true,
   },
   {
@@ -103,6 +108,7 @@ const MENU_ITEMS = [
     image: IMAGES.macchiato,
     tags: ['Creamy', 'Smart Bar'],
     method: 'smart_bar',
+    grade: 'Second Harvest',
     customizable: true,
   },
   {
@@ -114,6 +120,7 @@ const MENU_ITEMS = [
     image: IMAGES.cheeseTea,
     tags: ['Savory Sweet', 'Smart Bar'],
     method: 'smart_bar',
+    grade: 'Second Harvest',
     customizable: true,
   },
   {
@@ -125,6 +132,7 @@ const MENU_ITEMS = [
     image: IMAGES.strawberryMatcha,
     tags: ['Fruity', 'Smart Bar'],
     method: 'smart_bar',
+    grade: 'Second Harvest',
     customizable: true,
   },
   {
@@ -136,30 +144,33 @@ const MENU_ITEMS = [
     image: IMAGES.tropical,
     tags: ['Refreshing', 'Smart Bar'],
     method: 'smart_bar',
+    grade: 'Second Harvest',
     customizable: true,
   },
 
-  // --- PREMIUM SERIES (Manual Whisk - Adjustable) ---
+  // --- PREMIUM SERIES ---
   {
     id: 101,
     categoryId: 'premium',
     name: 'Koku Matcha Latte',
-    description: 'Iced. Prime Takumi Harvest. Elegant harmony of umami richness.',
+    description: 'Iced. Prime Takumi Harvest. Elegant harmony of umami richness and natural sweetness.',
     price: 62000,
     image: IMAGES.premiumKoku,
     tags: ['Prime Harvest', 'Hand Whisked'],
     method: 'manual',
+    grade: 'First Harvest',
     customizable: true,
   },
   {
     id: 102,
     categoryId: 'premium',
     name: 'Koku Usucha',
-    description: 'Iced Pure thin tea. The truest expression of Takumi Harvest.',
+    description: 'Iced Pure thin tea. The truest expression of Takumi Harvest. Intense umami.',
     price: 58000,
     image: IMAGES.pureIced,
     tags: ['Pure Tea', 'Hand Whisked'],
     method: 'manual',
+    grade: 'First Harvest',
     customizable: true,
   },
   {
@@ -171,6 +182,7 @@ const MENU_ITEMS = [
     image: IMAGES.premiumNagomi,
     tags: ['Silky Smooth', 'Hand Whisked'],
     method: 'manual',
+    grade: 'First Harvest',
     customizable: true,
   },
   {
@@ -182,6 +194,7 @@ const MENU_ITEMS = [
     image: IMAGES.pureIced,
     tags: ['Pure Tea', 'Hand Whisked'],
     method: 'manual',
+    grade: 'First Harvest',
     customizable: true,
   },
 
@@ -229,6 +242,10 @@ const CUSTOMIZATIONS = {
   premium_strength: [
     { id: 'standard', name: 'Standard (2g)', price: 0, desc: 'Balanced' },
     { id: 'strong', name: 'Stronger (+1g)', price: 9000, desc: 'Extra Umami' },
+  ],
+  harvest: [
+    { id: 'second', name: 'Second Harvest', price: 0, desc: 'Standard Grade' },
+    { id: 'first', name: 'First Harvest (Umami)', price: 9000, desc: 'Rich & Intense' },
   ]
 };
 
@@ -271,9 +288,8 @@ export default function FeelMatchaApp() {
     };
     setCart([...cart, newItem]);
     
-    // LOGIC UPSELL: STOCK CLEARANCE
-    // Jika user membeli "Best Seller" ATAU "Premium" (Drinks), dan belum ada makanan
-    if ((item.categoryId === 'best_seller' || item.categoryId === 'premium') && !cart.some(i => i.categoryId === 'food')) {
+    // Logic: Trigger Food Upsell if only Best Seller drink is bought
+    if (item.categoryId === 'best_seller' && !cart.some(i => i.categoryId === 'food')) {
       setShowUpsell(true);
     } else {
       setCurrentPage('menu');
@@ -286,7 +302,7 @@ export default function FeelMatchaApp() {
       ...milleCrepe,
       quantity: 1,
       cartId: Date.now(),
-      totalPrice: milleCrepe.price - 5000, // Diskon untuk upsell
+      totalPrice: milleCrepe.price - 5000,
       isPromo: true
     };
     setCart([...cart, discountedItem]);
@@ -294,18 +310,36 @@ export default function FeelMatchaApp() {
     setCurrentPage('menu');
   };
 
-  const handlePlaceOrderClick = () => {
-    // Sebelum ke Success, tawarin R&D dulu
+  // Triggered by "Try Free Tester" button in Menu
+  const handleRnDTrigger = () => {
     setShowRnDOffer(true);
   };
 
   const handleRnDDecision = (accepted) => {
     setShowRnDOffer(false);
     if (accepted) {
-      setHasRnDTicket(true);
-    } else {
-      setHasRnDTicket(false);
+      // Add R&D item to cart with 0 price
+      const rndItem = {
+        id: 'rnd_tester',
+        name: 'R&D Tester: Hojicha',
+        price: 0,
+        quantity: 1,
+        cartId: Date.now(),
+        totalPrice: 0,
+        tags: ['Free Tester', 'Feedback Required'],
+        image: IMAGES.premiumKoku // Placeholder image for tester
+      };
+      setCart([...cart, rndItem]);
+      // Optional: Navigate to cart to show it was added
+      // setCurrentPage('cart'); 
     }
+  };
+
+  const placeOrder = () => {
+    // Check if R&D ticket is needed based on cart content
+    const containsTester = cart.some(item => item.id === 'rnd_tester');
+    setHasRnDTicket(containsTester);
+    
     setCurrentPage('success');
     setLoyaltyPoints(prev => prev + Math.floor(cartTotal / 1000));
     setCart([]);
@@ -313,7 +347,6 @@ export default function FeelMatchaApp() {
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-900 max-w-md mx-auto shadow-2xl overflow-hidden relative flex flex-col">
-      
       {/* HEADER (After Login) */}
       {currentPage !== 'login' && (
         <div className="bg-white px-4 py-3 shadow-sm sticky top-0 z-10 flex justify-between items-center flex-shrink-0">
@@ -343,6 +376,7 @@ export default function FeelMatchaApp() {
               setSelectedItem(item);
               setCurrentPage('product');
             }}
+            onRnDClick={handleRnDTrigger}
           />
         )}
         {currentPage === 'product' && selectedItem && (
@@ -357,7 +391,7 @@ export default function FeelMatchaApp() {
             cart={cart}
             total={cartTotal}
             onBack={() => setCurrentPage('menu')}
-            onPlaceOrder={handlePlaceOrderClick} 
+            onPlaceOrder={placeOrder} 
             setCart={setCart}
           />
         )}
@@ -370,7 +404,6 @@ export default function FeelMatchaApp() {
         )}
       </div>
 
-      {/* MODALS */}
       {showUpsell && (
         <UpsellModal 
           onAccept={handleUpsellAccept} 
@@ -457,22 +490,43 @@ function LoginView({ onLogin }) {
   );
 }
 
-function MenuView({ selectedCategory, setSelectedCategory, onItemClick }) {
+function MenuView({ selectedCategory, setSelectedCategory, onItemClick, onRnDClick }) {
   return (
     <>
-      <div className="mt-6"></div>
+      <div className="mt-4"></div>
 
-      {/* JOIN COMMUNITY BANNER */}
-      <div className="px-4 mb-4">
-        <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl p-3 text-white flex justify-between items-center shadow-md">
+      {/* FEATURED BANNER SCROLL (Community & R&D) */}
+      <div className="flex overflow-x-auto px-4 space-x-3 mb-4 no-scrollbar pb-2">
+        
+        {/* CARD 1: COMMUNITY */}
+        <div className="flex-shrink-0 w-64 bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl p-3 text-white flex justify-between items-center shadow-md">
           <div>
-            <div className="text-xs text-gray-300 font-bold uppercase tracking-wider">Community</div>
+            <div className="text-[10px] text-gray-300 font-bold uppercase tracking-wider flex items-center">
+              <Users size={10} className="mr-1"/> Community
+            </div>
             <div className="font-bold text-sm">Join Feel Matcha Gang</div>
           </div>
-          <button className="bg-white text-gray-900 text-xs font-bold px-3 py-1.5 rounded-lg">
+          <button className="bg-white text-gray-900 text-[10px] font-bold px-3 py-1.5 rounded-lg whitespace-nowrap">
             Join
           </button>
         </div>
+
+        {/* CARD 2: R&D TESTER (NEW) */}
+        <div className="flex-shrink-0 w-64 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl p-3 text-white flex justify-between items-center shadow-md">
+          <div>
+            <div className="text-[10px] text-blue-100 font-bold uppercase tracking-wider flex items-center">
+              <Beaker size={10} className="mr-1"/> R&D Lab
+            </div>
+            <div className="font-bold text-sm">Try Free Tester</div>
+          </div>
+          <button 
+            onClick={onRnDClick}
+            className="bg-white text-blue-600 text-[10px] font-bold px-3 py-1.5 rounded-lg whitespace-nowrap shadow-sm active:scale-95 transition-transform"
+          >
+            Claim
+          </button>
+        </div>
+
       </div>
 
       {/* SMART BAR PROMO BANNER */}
@@ -583,12 +637,16 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
     milk: CUSTOMIZATIONS.milk[0],
     sugar: CUSTOMIZATIONS.sugar[0],
     strength: item.categoryId === 'premium' ? CUSTOMIZATIONS.premium_strength[0] : null,
-    ice: CUSTOMIZATIONS.ice[0]
+    ice: CUSTOMIZATIONS.ice[0],
+    harvest: CUSTOMIZATIONS.harvest[0] 
   });
 
-  // Calculate dynamic price based on selection
   let extraPrice = options.milk.price + (options.strength?.price || 0);
   
+  if (item.categoryId === 'premium' && options.harvest?.price) {
+    extraPrice += options.harvest.price;
+  }
+
   const currentPrice = (item.price + extraPrice) * quantity;
 
   return (
@@ -634,20 +692,35 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
         {item.customizable && (
           <div className="space-y-6">
             
-            {/* GRADE INFO */}
-            <div>
+            {/* HARVEST GRADE OPTION - Only for Premium */}
+            {item.categoryId === 'premium' && (
+              <div>
                 <div className="flex items-center space-x-2 mb-3">
                   <Leaf size={16} className="text-green-600" />
                   <label className="font-bold text-gray-900">Matcha Grade</label>
                 </div>
-                <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl">
-                 <div className="text-sm font-bold text-gray-700">
-                    {item.categoryId === 'premium' ? 'First Harvest (Ceremonial)' : 'Second Harvest (Standard)'}
-                 </div>
-               </div>
-            </div>
+                <div className="grid grid-cols-1 gap-2">
+                  {CUSTOMIZATIONS.harvest.map(opt => (
+                    <button
+                      key={opt.id}
+                      onClick={() => setOptions({ ...options, harvest: opt })}
+                      className={`flex justify-between items-center p-3 rounded-xl border text-left transition-all ${
+                        options.harvest.id === opt.id
+                          ? 'border-green-600 bg-green-50 ring-1 ring-green-600'
+                          : 'border-gray-200 hover:border-green-300'
+                      }`}
+                    >
+                      <div>
+                        <div className={`font-semibold text-sm ${options.harvest.id === opt.id ? 'text-green-900' : 'text-gray-700'}`}>{opt.name}</div>
+                        <div className="text-xs text-gray-500">{opt.desc}</div>
+                      </div>
+                      {opt.price > 0 && <span className="text-xs font-bold text-green-700">+Rp {opt.price.toLocaleString()}</span>}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
-            {/* STRENGTH */}
             <div>
               <div className="flex justify-between items-center mb-3">
                 <label className="font-bold text-gray-900">Matcha Strength</label>
@@ -658,7 +731,6 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
                 )}
               </div>
               
-              {/* LOGIC: Smart Bar = Fixed. Premium = Adjustable Strength (+9k) */}
               {item.method === 'smart_bar' ? (
                  <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl text-center">
                     <div className="text-sm font-bold text-gray-500">Standard Strength</div>
@@ -797,75 +869,6 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
   );
 }
 
-// --- NEW COMPONENT: Upsell Modal (Stock Clearance) ---
-function UpsellModal({ onAccept, onDecline }) {
-  return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl transform transition-all scale-100">
-        <div className="h-32 bg-yellow-50 relative overflow-hidden">
-           <img src="https://tse2.mm.bing.net/th?q=matcha+mille+crepe+cake+slice&w=500&h=500&c=7" className="w-full h-full object-cover opacity-90" />
-           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-             <div className="text-white">
-               <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded mb-2 inline-block">STOCK CLEARANCE</span>
-               <h3 className="font-bold text-lg leading-none">Perfect Pairing?</h3>
-             </div>
-           </div>
-        </div>
-        <div className="p-5">
-          <p className="text-gray-600 text-sm mb-4">
-            Order your drink with <strong>Matcha Mille Crepe</strong> and <strong>SAVE Rp 5.000</strong>.
-          </p>
-          <div className="flex space-x-3">
-            <button 
-              onClick={onDecline}
-              className="flex-1 py-3 text-gray-500 font-bold text-sm bg-gray-100 rounded-xl hover:bg-gray-200"
-            >
-              No, thanks
-            </button>
-            <button 
-              onClick={onAccept}
-              className="flex-1 py-3 text-white font-bold text-sm bg-green-700 rounded-xl hover:bg-green-800 shadow-lg shadow-green-700/20"
-            >
-              Add (+33k)
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// --- NEW COMPONENT: R&D Offer Modal ---
-function RnDOfferModal({ onAccept, onDecline }) {
-  return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl p-6 text-center">
-        <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Beaker size={32} className="text-blue-600" />
-        </div>
-        <h3 className="text-xl font-bold text-gray-900 mb-2">Want a Free Tester?</h3>
-        <p className="text-gray-500 text-sm mb-6">
-          We are testing a new <strong>"Roasted Hojicha Latte"</strong>. Would you like to try a mini cup for free?
-        </p>
-        <div className="flex flex-col space-y-3">
-          <button 
-            onClick={onAccept}
-            className="w-full py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700"
-          >
-            Yes, I'll try it!
-          </button>
-          <button 
-            onClick={onDecline}
-            className="w-full py-3 text-gray-400 font-medium text-sm hover:text-gray-600"
-          >
-            No thanks, maybe later
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function CartView({ cart, total, onBack, onPlaceOrder, setCart }) {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -887,10 +890,11 @@ function CartView({ cart, total, onBack, onPlaceOrder, setCart }) {
                 <h3 className="font-bold text-gray-900">{item.name}</h3>
                 {item.customizable && (
                   <div className="text-xs text-gray-500 mt-1 space-y-0.5">
-                    <p className="font-semibold text-green-700">
-                      Grade: {item.categoryId === 'premium' ? 'First Harvest (Ceremonial)' : 'Second Harvest (Standard)'}
-                    </p>
-                    
+                    {/* [DISPLAY] Tampilkan Grade jika ada */}
+                    {item.options?.harvest && item.categoryId === 'premium' && (
+                       <p className="font-semibold text-green-700">Grade: {item.options.harvest.name}</p>
+                    )}
+                    {/* Logic Strength Display */}
                     {item.method === 'smart_bar' ? (
                        <p>Strength: Standard [Fixed]</p>
                     ) : (
@@ -964,7 +968,115 @@ function CartView({ cart, total, onBack, onPlaceOrder, setCart }) {
   );
 }
 
+// --- NEW COMPONENT: Upsell Modal (Stock Clearance) ---
+function UpsellModal({ onAccept, onDecline }) {
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl transform transition-all scale-100">
+        <div className="h-32 bg-yellow-50 relative overflow-hidden">
+           <img src="https://tse2.mm.bing.net/th?q=matcha+mille+crepe+cake+slice&w=500&h=500&c=7" className="w-full h-full object-cover opacity-90" />
+           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+             <div className="text-white">
+               <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded mb-2 inline-block">STOCK CLEARANCE</span>
+               <h3 className="font-bold text-lg leading-none">Perfect Pairing?</h3>
+             </div>
+           </div>
+        </div>
+        <div className="p-5">
+          <p className="text-gray-600 text-sm mb-4">
+            Order your drink with <strong>Matcha Mille Crepe</strong> and <strong>SAVE Rp 5.000</strong>.
+          </p>
+          <div className="flex space-x-3">
+            <button 
+              onClick={onDecline}
+              className="flex-1 py-3 text-gray-500 font-bold text-sm bg-gray-100 rounded-xl hover:bg-gray-200"
+            >
+              No, thanks
+            </button>
+            <button 
+              onClick={onAccept}
+              className="flex-1 py-3 text-white font-bold text-sm bg-green-700 rounded-xl hover:bg-green-800 shadow-lg shadow-green-700/20"
+            >
+              Add (+33k)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- NEW COMPONENT: R&D Offer Modal ---
+function RnDOfferModal({ onAccept, onDecline }) {
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl p-6 text-center">
+        <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Beaker size={32} className="text-blue-600" />
+        </div>
+        <h3 className="text-xl font-bold text-gray-900 mb-2">Want a Free Tester?</h3>
+        <p className="text-gray-500 text-sm mb-6">
+          We are testing a new <strong>"Roasted Hojicha Latte"</strong>. Would you like to try a mini cup for free?
+        </p>
+        <div className="flex flex-col space-y-3">
+          <button 
+            onClick={onAccept}
+            className="w-full py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700"
+          >
+            Yes, I'll try it!
+          </button>
+          <button 
+            onClick={onDecline}
+            className="w-full py-3 text-gray-400 font-medium text-sm hover:text-gray-600"
+          >
+            No thanks, maybe later
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- NEW COMPONENT: Feedback Form on Success ---
+function FeedbackForm({ onSubmit }) {
+  const [rating, setRating] = useState(0);
+  const [text, setText] = useState('');
+
+  return (
+    <div className="mt-6 bg-blue-50 rounded-xl p-4 border border-blue-100 text-left">
+      <h4 className="font-bold text-blue-900 mb-2 flex items-center">
+        <MessageSquare size={16} className="mr-2"/> R&D Feedback
+      </h4>
+      <p className="text-xs text-blue-700 mb-3">How was the Hojicha Tester?</p>
+      
+      <div className="flex space-x-2 mb-3">
+        {[1,2,3,4,5].map(star => (
+          <button key={star} onClick={() => setRating(star)}>
+            <Star size={24} className={star <= rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"} />
+          </button>
+        ))}
+      </div>
+      
+      <textarea 
+        className="w-full p-2 text-xs rounded border border-blue-200 mb-2"
+        placeholder="Any thoughts on taste/sweetness?"
+        value={text}
+        onChange={e => setText(e.target.value)}
+      />
+      
+      <button 
+        onClick={onSubmit}
+        className="w-full bg-blue-600 text-white text-xs font-bold py-2 rounded-lg"
+      >
+        Submit Feedback
+      </button>
+    </div>
+  );
+}
+
 function SuccessView({ onHome, pointsEarned, hasTicket }) {
+  const [feedbackSent, setFeedbackSent] = useState(false);
+
   return (
     <div className="min-h-screen bg-green-800 flex flex-col items-center justify-center text-white p-8 text-center relative overflow-hidden">
       <div className="absolute top-0 left-0 w-64 h-64 bg-green-700 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
@@ -977,7 +1089,7 @@ function SuccessView({ onHome, pointsEarned, hasTicket }) {
       <h1 className="text-3xl font-bold mb-2 z-10">Order Sent!</h1>
       <p className="text-green-200 mb-8 z-10">Your order has been sent to the Smart Bar.</p>
 
-      {/* R&D TICKET SECTION */}
+      {/* R&D TICKET SECTION WITH FEEDBACK FORM */}
       {hasTicket && (
         <div className="bg-white text-gray-900 rounded-xl p-4 w-full max-w-xs shadow-xl z-10 mb-6 border-2 border-blue-400 border-dashed relative">
           <div className="absolute -top-3 -right-3 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">R&D PASS</div>
@@ -991,7 +1103,15 @@ function SuccessView({ onHome, pointsEarned, hasTicket }) {
           <div className="h-12 bg-gray-100 rounded flex items-center justify-center">
             <span className="font-mono text-lg tracking-widest font-bold text-gray-400">RND-8821</span>
           </div>
-          <p className="text-[10px] text-center mt-2 text-gray-400">Please provide feedback on our website later!</p>
+          
+          {/* IN-PAGE FEEDBACK FORM */}
+          {!feedbackSent ? (
+            <FeedbackForm onSubmit={() => setFeedbackSent(true)} />
+          ) : (
+            <div className="mt-4 bg-green-50 p-3 rounded-lg text-green-800 text-xs font-bold flex items-center justify-center">
+              <Check size={14} className="mr-1"/> Feedback Sent! Thanks!
+            </div>
+          )}
         </div>
       )}
 
