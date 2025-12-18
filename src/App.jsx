@@ -1,5 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { ShoppingBag, ChevronLeft, Star, Plus, Minus, X, Coffee, Utensils, Zap, Award, ArrowRight, Check, User, Phone, Sparkles, Clock, Package, Edit3, ThermometerSnowflake, Leaf, Lock } from 'lucide-react';
+import React, { useState } from 'react';
+import { ShoppingBag, ChevronLeft, Star, Plus, Minus, X, Coffee, Utensils, Zap, Award, ArrowRight, Check, User, Phone, Clock, Package, Edit3, ThermometerSnowflake, Leaf, Lock, Beaker } from 'lucide-react';
+
+/**
+ * KONFIGURASI GAMBAR (STABLE URLS)
+ */
+const IMAGES = {
+  signatureLatte: "https://tse4.mm.bing.net/th?q=iced+matcha+latte+plastic+cup&w=500&h=500&c=7",
+  macchiato: "https://tse3.mm.bing.net/th?q=matcha+macchiato+drink&w=500&h=500&c=7",
+  cheeseTea: "https://tse1.mm.bing.net/th?q=cheese+foam+matcha+tea&w=500&h=500&c=7",
+  strawberryMatcha: "https://tse2.mm.bing.net/th?q=strawberry+matcha+latte+layers&w=500&h=500&c=7",
+  tropical: "https://tse1.mm.bing.net/th?q=iced+matcha+lemonade&w=500&h=500&c=7",
+  choux: "https://tse1.mm.bing.net/th?q=matcha+cream+puff+pastry&w=500&h=500&c=7",
+  milleCrepe: "https://tse2.mm.bing.net/th?q=matcha+mille+crepe+cake+slice&w=500&h=500&c=7",
+  croffle: "https://tse3.mm.bing.net/th?q=croffle+plain&w=500&h=500&c=7",
+  premiumKoku: "https://tse4.mm.bing.net/th?q=hot+matcha+latte+art+ceramic+cup&w=500&h=500&c=7",
+  premiumNagomi: "https://tse3.mm.bing.net/th?q=matcha+latte+art+heart&w=500&h=500&c=7",
+  pureIced: "https://tse2.mm.bing.net/th?q=matcha+tea+ceremony+bowl&w=500&h=500&c=7",
+  logo: "image_0d680c.png" 
+};
 
 // --- Mock Data ---
 
@@ -20,7 +38,7 @@ const MENU_ITEMS = [
     description: 'Special price! Fresh strawberry puree meets premium iced matcha.',
     price: 17000, 
     originalPrice: 34000,
-    image: 'https://tse2.mm.bing.net/th?q=strawberry+matcha+latte+layers&w=500&h=500&c=7',
+    image: IMAGES.strawberryMatcha,
     tags: ['50% OFF', 'Smart Bar'],
     method: 'smart_bar',
     customizable: true,
@@ -32,7 +50,7 @@ const MENU_ITEMS = [
     description: 'Crispy choux pastry filled with premium matcha cream.',
     price: 12000,
     originalPrice: 24000,
-    image: 'https://tse1.mm.bing.net/th?q=matcha+cream+puff+pastry&w=500&h=500&c=7', 
+    image: IMAGES.choux,
     tags: ['Sold Out Soon', 'Sweet Treat'],
     method: 'smart_bar',
     customizable: false,
@@ -46,7 +64,7 @@ const MENU_ITEMS = [
     description: 'Signature Iced Matcha Latte + Matcha Mille Crepe.',
     price: 55000,
     originalPrice: 60000,
-    image: 'https://tse2.mm.bing.net/th?q=matcha+mille+crepe+cake+slice&w=500&h=500&c=7',
+    image: IMAGES.milleCrepe,
     tags: ['Hemat 5k', 'Best Value'],
     method: 'smart_bar',
     customizable: true,
@@ -58,20 +76,20 @@ const MENU_ITEMS = [
     description: 'Iced Matcha Macchiato + Croffle Original.',
     price: 45000,
     originalPrice: 49000,
-    image: 'https://tse3.mm.bing.net/th?q=croffle+plain&w=500&h=500&c=7',
+    image: IMAGES.croffle,
     tags: ['Breakfast', 'Hemat'],
     method: 'smart_bar',
     customizable: true,
   },
 
-  // --- BEST SELLERS (Smart Bar - All Iced) ---
+  // --- BEST SELLERS (Smart Bar - Fixed Strength) ---
   {
     id: 1,
     categoryId: 'best_seller',
     name: 'Signature Matcha Latte',
     description: 'Our classic blend. Freshly whisked ceremonial grade matcha with premium milk and ice.',
     price: 32000, 
-    image: 'https://tse4.mm.bing.net/th?q=iced+matcha+latte+plastic+cup&w=500&h=500&c=7', 
+    image: IMAGES.signatureLatte,
     tags: ['Best Seller', 'Smart Bar'],
     method: 'smart_bar',
     customizable: true,
@@ -82,7 +100,7 @@ const MENU_ITEMS = [
     name: 'Matcha Macchiato',
     description: 'Iced. A delicate balance of matcha and macchiato foam. Creamy and intense.',
     price: 34000, 
-    image: 'https://tse3.mm.bing.net/th?q=matcha+macchiato+drink&w=500&h=500&c=7', 
+    image: IMAGES.macchiato,
     tags: ['Creamy', 'Smart Bar'],
     method: 'smart_bar',
     customizable: true,
@@ -93,7 +111,7 @@ const MENU_ITEMS = [
     name: 'Cream Cheese Overdose',
     description: 'Iced Signature matcha topped with thick savory cream cheese foam.',
     price: 38000,
-    image: 'https://tse1.mm.bing.net/th?q=cheese+foam+matcha+tea&w=500&h=500&c=7', 
+    image: IMAGES.cheeseTea,
     tags: ['Savory Sweet', 'Smart Bar'],
     method: 'smart_bar',
     customizable: true,
@@ -104,7 +122,7 @@ const MENU_ITEMS = [
     name: 'Strawberry Matcha',
     description: 'Iced. Sweet house-made strawberry puree layered with fresh matcha milk.',
     price: 34000, 
-    image: 'https://tse2.mm.bing.net/th?q=strawberry+matcha+latte+layers&w=500&h=500&c=7', 
+    image: IMAGES.strawberryMatcha,
     tags: ['Fruity', 'Smart Bar'],
     method: 'smart_bar',
     customizable: true,
@@ -115,20 +133,20 @@ const MENU_ITEMS = [
     name: 'Tropical Lemonade Matcha',
     description: 'Refreshing iced zesty lemonade topped with a shot of premium matcha.',
     price: 32000, 
-    image: 'https://tse1.mm.bing.net/th?q=iced+matcha+lemonade&w=500&h=500&c=7', 
+    image: IMAGES.tropical,
     tags: ['Refreshing', 'Smart Bar'],
     method: 'smart_bar',
     customizable: true,
   },
 
-  // --- PREMIUM SERIES (Manual Whisk - All Iced) ---
+  // --- PREMIUM SERIES (Manual Whisk - Adjustable) ---
   {
     id: 101,
     categoryId: 'premium',
     name: 'Koku Matcha Latte',
-    description: 'Iced. Prime Takumi Harvest. Elegant harmony of umami richness and natural sweetness.',
+    description: 'Iced. Prime Takumi Harvest. Elegant harmony of umami richness.',
     price: 62000,
-    image: 'https://tse4.mm.bing.net/th?q=hot+matcha+latte+art+ceramic+cup&w=500&h=500&c=7',
+    image: IMAGES.premiumKoku,
     tags: ['Prime Harvest', 'Hand Whisked'],
     method: 'manual',
     customizable: true,
@@ -137,12 +155,12 @@ const MENU_ITEMS = [
     id: 102,
     categoryId: 'premium',
     name: 'Koku Usucha',
-    description: 'Iced Pure thin tea. The truest expression of Takumi Harvest. Intense umami.',
+    description: 'Iced Pure thin tea. The truest expression of Takumi Harvest.',
     price: 58000,
-    image: 'https://tse2.mm.bing.net/th?q=matcha+tea+ceremony+bowl&w=500&h=500&c=7',
+    image: IMAGES.pureIced,
     tags: ['Pure Tea', 'Hand Whisked'],
     method: 'manual',
-    customizable: true, // Diaktifkan agar bisa pilih Harvest Grade
+    customizable: true,
   },
   {
     id: 103,
@@ -150,7 +168,7 @@ const MENU_ITEMS = [
     name: 'Nagomi Matcha Latte',
     description: 'Iced. Delicate nori aroma, robust umami, silky-smooth texture.',
     price: 52000,
-    image: 'https://tse3.mm.bing.net/th?q=matcha+latte+art+heart&w=500&h=500&c=7',
+    image: IMAGES.premiumNagomi,
     tags: ['Silky Smooth', 'Hand Whisked'],
     method: 'manual',
     customizable: true,
@@ -161,10 +179,10 @@ const MENU_ITEMS = [
     name: 'Nagomi Usucha',
     description: 'Iced Pure thin tea. Robust umami with a silky texture.',
     price: 49000,
-    image: 'https://tse4.mm.bing.net/th?q=cold+brew+matcha+glass&w=500&h=500&c=7',
+    image: IMAGES.pureIced,
     tags: ['Pure Tea', 'Hand Whisked'],
     method: 'manual',
-    customizable: true, // Diaktifkan agar bisa pilih Harvest Grade
+    customizable: true,
   },
 
   // --- FOOD ---
@@ -174,7 +192,7 @@ const MENU_ITEMS = [
     name: 'Matcha Mille Crepe',
     description: '20 layers of delicate crepe with matcha cream.',
     price: 38000,
-    image: 'https://tse2.mm.bing.net/th?q=matcha+mille+crepe+cake+slice&w=500&h=500&c=7',
+    image: IMAGES.milleCrepe,
     tags: ['Perfect Pairing'], 
     customizable: false,
   },
@@ -184,7 +202,7 @@ const MENU_ITEMS = [
     name: 'Croffle Original',
     description: 'Crispy croissant waffle with maple syrup.',
     price: 25000, 
-    image: 'https://tse3.mm.bing.net/th?q=croffle+plain&w=500&h=500&c=7',
+    image: IMAGES.croffle,
     tags: [],
     customizable: false,
   },
@@ -202,19 +220,15 @@ const CUSTOMIZATIONS = {
     { id: '50', name: 'Half (50%)', price: 0 },
     { id: '0', name: 'No Sugar (0%)', price: 0 },
   ],
-  strength: [
-    { id: 'standard', name: 'Standard (2g)', price: 0, desc: 'Balanced' },
-    { id: 'strong', name: 'Strong (3g)', price: 5000, desc: 'Extra Umami' },
-  ],
   ice: [
     { id: 'normal', name: 'Normal Ice', price: 0 },
     { id: 'less', name: 'Less Ice', price: 0 },
     { id: 'no', name: 'No Ice', price: 0 },
     { id: 'extra', name: 'Extra Ice', price: 0 },
   ],
-  harvest: [
-    { id: 'second', name: 'Second Harvest', price: 0, desc: 'Standard Grade' },
-    { id: 'first', name: 'First Harvest (Umami)', price: 9000, desc: 'Rich & Intense' },
+  premium_strength: [
+    { id: 'standard', name: 'Standard (2g)', price: 0, desc: 'Balanced' },
+    { id: 'strong', name: 'Stronger (+1g)', price: 9000, desc: 'Extra Umami' },
   ]
 };
 
@@ -225,7 +239,10 @@ export default function FeelMatchaApp() {
   const [selectedCategory, setSelectedCategory] = useState('flash_sale');
   const [selectedItem, setSelectedItem] = useState(null);
   const [cart, setCart] = useState([]);
+  const [loyaltyPoints, setLoyaltyPoints] = useState(0);
   const [showUpsell, setShowUpsell] = useState(false);
+  const [showRnDOffer, setShowRnDOffer] = useState(false); 
+  const [hasRnDTicket, setHasRnDTicket] = useState(false); 
   const [user, setUser] = useState({ name: '', phone: '' });
 
   const cartTotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
@@ -233,17 +250,15 @@ export default function FeelMatchaApp() {
 
   const handleLogin = (userData) => {
     setUser(userData);
+    setLoyaltyPoints(150);
     setCurrentPage('menu');
   };
 
   const addToCart = (item, options, note, quantity) => {
-    let extraPrice = 
-      (options?.milk?.price || 0) + 
-      (options?.strength?.price || 0);
-
-    // Logic: Tambah harga Harvest jika item Premium dan Customizable
-    if (item.categoryId === 'premium' && options?.harvest?.price && item.customizable) {
-      extraPrice += options.harvest.price;
+    let extraPrice = 0;
+    if (options?.milk?.price) extraPrice += options.milk.price;
+    if (item.categoryId === 'premium' && options?.strength?.price) {
+      extraPrice += options.strength.price;
     }
 
     const newItem = {
@@ -256,7 +271,9 @@ export default function FeelMatchaApp() {
     };
     setCart([...cart, newItem]);
     
-    if (item.categoryId === 'best_seller' && !cart.some(i => i.categoryId === 'food')) {
+    // LOGIC UPSELL: STOCK CLEARANCE
+    // Jika user membeli "Best Seller" ATAU "Premium" (Drinks), dan belum ada makanan
+    if ((item.categoryId === 'best_seller' || item.categoryId === 'premium') && !cart.some(i => i.categoryId === 'food')) {
       setShowUpsell(true);
     } else {
       setCurrentPage('menu');
@@ -269,7 +286,7 @@ export default function FeelMatchaApp() {
       ...milleCrepe,
       quantity: 1,
       cartId: Date.now(),
-      totalPrice: milleCrepe.price - 5000,
+      totalPrice: milleCrepe.price - 5000, // Diskon untuk upsell
       isPromo: true
     };
     setCart([...cart, discountedItem]);
@@ -277,13 +294,26 @@ export default function FeelMatchaApp() {
     setCurrentPage('menu');
   };
 
-  const placeOrder = () => {
+  const handlePlaceOrderClick = () => {
+    // Sebelum ke Success, tawarin R&D dulu
+    setShowRnDOffer(true);
+  };
+
+  const handleRnDDecision = (accepted) => {
+    setShowRnDOffer(false);
+    if (accepted) {
+      setHasRnDTicket(true);
+    } else {
+      setHasRnDTicket(false);
+    }
     setCurrentPage('success');
+    setLoyaltyPoints(prev => prev + Math.floor(cartTotal / 1000));
     setCart([]);
   };
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-900 max-w-md mx-auto shadow-2xl overflow-hidden relative flex flex-col">
+      
       {/* HEADER (After Login) */}
       {currentPage !== 'login' && (
         <div className="bg-white px-4 py-3 shadow-sm sticky top-0 z-10 flex justify-between items-center flex-shrink-0">
@@ -296,7 +326,7 @@ export default function FeelMatchaApp() {
           <div className="flex flex-col items-end">
             <div className="flex items-center space-x-1 text-green-700 bg-green-50 px-2 py-1 rounded-full border border-green-100">
               <Award size={12} />
-              <span className="text-xs font-bold">150 Pts</span>
+              <span className="text-xs font-bold">{loyaltyPoints} Pts</span>
             </div>
           </div>
         </div>
@@ -327,15 +357,20 @@ export default function FeelMatchaApp() {
             cart={cart}
             total={cartTotal}
             onBack={() => setCurrentPage('menu')}
-            onPlaceOrder={placeOrder}
+            onPlaceOrder={handlePlaceOrderClick} 
             setCart={setCart}
           />
         )}
         {currentPage === 'success' && (
-          <SuccessView onHome={() => setCurrentPage('menu')} pointsEarned={Math.floor(cartTotal/1000)} />
+          <SuccessView 
+            onHome={() => setCurrentPage('menu')} 
+            pointsEarned={Math.floor(cartTotal/1000)}
+            hasTicket={hasRnDTicket} 
+          />
         )}
       </div>
 
+      {/* MODALS */}
       {showUpsell && (
         <UpsellModal 
           onAccept={handleUpsellAccept} 
@@ -343,6 +378,13 @@ export default function FeelMatchaApp() {
             setShowUpsell(false);
             setCurrentPage('menu');
           }} 
+        />
+      )}
+
+      {showRnDOffer && (
+        <RnDOfferModal 
+          onAccept={() => handleRnDDecision(true)}
+          onDecline={() => handleRnDDecision(false)}
         />
       )}
 
@@ -375,10 +417,7 @@ function LoginView({ onLogin }) {
   return (
     <div className="h-full flex flex-col justify-center items-center p-8 bg-white text-center">
       <div className="mb-20"></div>
-      
-      {/* Login Screen Title Only */}
       <h1 className="text-4xl font-extrabold text-green-900 mb-2 tracking-tight">FEEL <br/>MATCHA</h1>
-      
       <p className="text-gray-500 mb-12 text-sm max-w-xs mx-auto font-medium">
         Premium Ceremonial Grade Matcha<br/>from Japan.
       </p>
@@ -543,17 +582,13 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
   const [options, setOptions] = useState({
     milk: CUSTOMIZATIONS.milk[0],
     sugar: CUSTOMIZATIONS.sugar[0],
-    strength: CUSTOMIZATIONS.strength[0],
-    ice: CUSTOMIZATIONS.ice[0],
-    harvest: CUSTOMIZATIONS.harvest[0] 
+    strength: item.categoryId === 'premium' ? CUSTOMIZATIONS.premium_strength[0] : null,
+    ice: CUSTOMIZATIONS.ice[0]
   });
 
-  let extraPrice = options.milk.price + options.strength.price;
+  // Calculate dynamic price based on selection
+  let extraPrice = options.milk.price + (options.strength?.price || 0);
   
-  if (item.categoryId === 'premium' && options.harvest.price) {
-    extraPrice += options.harvest.price;
-  }
-
   const currentPrice = (item.price + extraPrice) * quantity;
 
   return (
@@ -599,39 +634,23 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
         {item.customizable && (
           <div className="space-y-6">
             
-            {/* HARVEST GRADE OPTION - Only for Premium */}
-            {item.categoryId === 'premium' && (
-              <div>
+            {/* GRADE INFO */}
+            <div>
                 <div className="flex items-center space-x-2 mb-3">
                   <Leaf size={16} className="text-green-600" />
                   <label className="font-bold text-gray-900">Matcha Grade</label>
                 </div>
-                <div className="grid grid-cols-1 gap-2">
-                  {CUSTOMIZATIONS.harvest.map(opt => (
-                    <button
-                      key={opt.id}
-                      onClick={() => setOptions({ ...options, harvest: opt })}
-                      className={`flex justify-between items-center p-3 rounded-xl border text-left transition-all ${
-                        options.harvest.id === opt.id
-                          ? 'border-green-600 bg-green-50 ring-1 ring-green-600'
-                          : 'border-gray-200 hover:border-green-300'
-                      }`}
-                    >
-                      <div>
-                        <div className={`font-semibold text-sm ${options.harvest.id === opt.id ? 'text-green-900' : 'text-gray-700'}`}>{opt.name}</div>
-                        <div className="text-xs text-gray-500">{opt.desc}</div>
-                      </div>
-                      {opt.price > 0 && <span className="text-xs font-bold text-green-700">+Rp {opt.price.toLocaleString()}</span>}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+                <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl">
+                 <div className="text-sm font-bold text-gray-700">
+                    {item.categoryId === 'premium' ? 'First Harvest (Ceremonial)' : 'Second Harvest (Standard)'}
+                 </div>
+               </div>
+            </div>
 
+            {/* STRENGTH */}
             <div>
               <div className="flex justify-between items-center mb-3">
                 <label className="font-bold text-gray-900">Matcha Strength</label>
-                {/* LOGIC PERUBAHAN: Tampilkan status di sini */}
                 {item.method === 'smart_bar' && (
                    <span className="text-xs font-bold text-yellow-700 bg-yellow-100 px-2 py-1 rounded flex items-center">
                      <Lock size={10} className="mr-1"/> Precision Dosed
@@ -639,26 +658,26 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
                 )}
               </div>
               
-              {/* LOGIC PERUBAHAN: Jika Smart Bar, tampilkan FIXED Label. Jika Manual, tampilkan Pilihan */}
+              {/* LOGIC: Smart Bar = Fixed. Premium = Adjustable Strength (+9k) */}
               {item.method === 'smart_bar' ? (
                  <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl text-center">
-                    <div className="text-sm font-bold text-gray-500">Standard</div>
+                    <div className="text-sm font-bold text-gray-500">Standard Strength</div>
                     <div className="text-xs text-gray-400 mt-1">Calibrated by Smart Bar</div>
                  </div>
               ) : (
                 <div className="grid grid-cols-1 gap-2">
-                  {CUSTOMIZATIONS.strength.map(opt => (
+                  {CUSTOMIZATIONS.premium_strength.map(opt => (
                     <button
                       key={opt.id}
                       onClick={() => setOptions({ ...options, strength: opt })}
                       className={`flex justify-between items-center p-3 rounded-xl border text-left transition-all ${
-                        options.strength.id === opt.id
+                        options.strength?.id === opt.id
                           ? 'border-green-600 bg-green-50 ring-1 ring-green-600'
                           : 'border-gray-200 hover:border-green-300'
                       }`}
                     >
                       <div>
-                        <div className={`font-semibold text-sm ${options.strength.id === opt.id ? 'text-green-900' : 'text-gray-700'}`}>{opt.name}</div>
+                        <div className={`font-semibold text-sm ${options.strength?.id === opt.id ? 'text-green-900' : 'text-gray-700'}`}>{opt.name}</div>
                         <div className="text-xs text-gray-500">{opt.desc}</div>
                       </div>
                       {opt.price > 0 && <span className="text-xs font-bold text-green-700">+Rp {opt.price.toLocaleString()}</span>}
@@ -778,6 +797,75 @@ function ProductDetailView({ item, onClose, onAddToCart }) {
   );
 }
 
+// --- NEW COMPONENT: Upsell Modal (Stock Clearance) ---
+function UpsellModal({ onAccept, onDecline }) {
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl transform transition-all scale-100">
+        <div className="h-32 bg-yellow-50 relative overflow-hidden">
+           <img src="https://tse2.mm.bing.net/th?q=matcha+mille+crepe+cake+slice&w=500&h=500&c=7" className="w-full h-full object-cover opacity-90" />
+           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+             <div className="text-white">
+               <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded mb-2 inline-block">STOCK CLEARANCE</span>
+               <h3 className="font-bold text-lg leading-none">Perfect Pairing?</h3>
+             </div>
+           </div>
+        </div>
+        <div className="p-5">
+          <p className="text-gray-600 text-sm mb-4">
+            Order your drink with <strong>Matcha Mille Crepe</strong> and <strong>SAVE Rp 5.000</strong>.
+          </p>
+          <div className="flex space-x-3">
+            <button 
+              onClick={onDecline}
+              className="flex-1 py-3 text-gray-500 font-bold text-sm bg-gray-100 rounded-xl hover:bg-gray-200"
+            >
+              No, thanks
+            </button>
+            <button 
+              onClick={onAccept}
+              className="flex-1 py-3 text-white font-bold text-sm bg-green-700 rounded-xl hover:bg-green-800 shadow-lg shadow-green-700/20"
+            >
+              Add (+33k)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- NEW COMPONENT: R&D Offer Modal ---
+function RnDOfferModal({ onAccept, onDecline }) {
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl p-6 text-center">
+        <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Beaker size={32} className="text-blue-600" />
+        </div>
+        <h3 className="text-xl font-bold text-gray-900 mb-2">Want a Free Tester?</h3>
+        <p className="text-gray-500 text-sm mb-6">
+          We are testing a new <strong>"Roasted Hojicha Latte"</strong>. Would you like to try a mini cup for free?
+        </p>
+        <div className="flex flex-col space-y-3">
+          <button 
+            onClick={onAccept}
+            className="w-full py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700"
+          >
+            Yes, I'll try it!
+          </button>
+          <button 
+            onClick={onDecline}
+            className="w-full py-3 text-gray-400 font-medium text-sm hover:text-gray-600"
+          >
+            No thanks, maybe later
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CartView({ cart, total, onBack, onPlaceOrder, setCart }) {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -799,11 +887,10 @@ function CartView({ cart, total, onBack, onPlaceOrder, setCart }) {
                 <h3 className="font-bold text-gray-900">{item.name}</h3>
                 {item.customizable && (
                   <div className="text-xs text-gray-500 mt-1 space-y-0.5">
-                    {/* [DISPLAY] Tampilkan Grade jika ada */}
-                    {item.options?.harvest && item.categoryId === 'premium' && (
-                       <p className="font-semibold text-green-700">Grade: {item.options.harvest.name}</p>
-                    )}
-                    {/* LOGIC PERUBAHAN: Tampilkan Fixed Strength untuk Smart Bar */}
+                    <p className="font-semibold text-green-700">
+                      Grade: {item.categoryId === 'premium' ? 'First Harvest (Ceremonial)' : 'Second Harvest (Standard)'}
+                    </p>
+                    
                     {item.method === 'smart_bar' ? (
                        <p>Strength: Standard [Fixed]</p>
                     ) : (
@@ -877,7 +964,7 @@ function CartView({ cart, total, onBack, onPlaceOrder, setCart }) {
   );
 }
 
-function SuccessView({ onHome, pointsEarned }) {
+function SuccessView({ onHome, pointsEarned, hasTicket }) {
   return (
     <div className="min-h-screen bg-green-800 flex flex-col items-center justify-center text-white p-8 text-center relative overflow-hidden">
       <div className="absolute top-0 left-0 w-64 h-64 bg-green-700 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
@@ -888,7 +975,25 @@ function SuccessView({ onHome, pointsEarned }) {
       </div>
       
       <h1 className="text-3xl font-bold mb-2 z-10">Order Sent!</h1>
-      <p className="text-green-200 mb-8 z-10">Your order has been sent to the Smart Bar. It will be ready in approximately 2 minutes.</p>
+      <p className="text-green-200 mb-8 z-10">Your order has been sent to the Smart Bar.</p>
+
+      {/* R&D TICKET SECTION */}
+      {hasTicket && (
+        <div className="bg-white text-gray-900 rounded-xl p-4 w-full max-w-xs shadow-xl z-10 mb-6 border-2 border-blue-400 border-dashed relative">
+          <div className="absolute -top-3 -right-3 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">R&D PASS</div>
+          <div className="flex items-center space-x-3 mb-2">
+            <Beaker size={24} className="text-blue-500"/>
+            <div className="text-left">
+              <h3 className="font-bold text-sm">Free Tester: Hojicha</h3>
+              <p className="text-[10px] text-gray-500">Show to cashier</p>
+            </div>
+          </div>
+          <div className="h-12 bg-gray-100 rounded flex items-center justify-center">
+            <span className="font-mono text-lg tracking-widest font-bold text-gray-400">RND-8821</span>
+          </div>
+          <p className="text-[10px] text-center mt-2 text-gray-400">Please provide feedback on our website later!</p>
+        </div>
+      )}
 
       <div className="bg-white text-green-900 rounded-2xl p-6 w-full max-w-xs shadow-xl z-10">
         <p className="text-xs text-gray-500 uppercase tracking-wide font-bold mb-1">You Earned</p>
